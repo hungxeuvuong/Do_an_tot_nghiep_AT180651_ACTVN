@@ -1,0 +1,25 @@
+free c:channel.
+free K:bitstring [private].
+fun HMAC(bitstring, bitstring): bitstring.
+
+ event SendCommand(bitstring).
+ event AcceptCommand(bitstring).
+
+ (* Switch process *)
+ let Switch(K:bitstring) =
+ new command:bitstring;
+ event SendCommand(command);
+ out(c, (command, HMAC(command, K))).
+ (* Light process *)
+ let Light(K:bitstring) =
+ in(c, (command:bitstring, MAC:bitstring));
+ if MAC = HMAC(command, K) then
+ event AcceptCommand(command).
+
+ query attacker (K).
+ query c:bitstring;
+ event (AcceptCommand(c)) ==> event (SendCommand(c)).
+query c:bitstring;
+event (AcceptCommand(c)) ==> inj-event (SendCommand(c)).
+ process
+ !Switch(K) | !Light(K)                            
