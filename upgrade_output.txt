@@ -1,0 +1,212 @@
+File "C:\Users\Dell\OneDrive\Documents\proverif\proverifbin2.05\5G_EAP-TLS_protocol_upgrade.pv", line 75, characters 6-11:
+Warning: identifier prekey rebound.
+File "C:\Users\Dell\OneDrive\Documents\proverif\proverifbin2.05\5G_EAP-TLS_protocol_upgrade.pv", line 77, characters 6-13:
+Warning: identifier Ksession rebound.
+File "C:\Users\Dell\OneDrive\Documents\proverif\proverifbin2.05\5G_EAP-TLS_protocol_upgrade.pv", line 102, characters 6-9:
+Warning: identifier HSNW rebound.
+Process 0 (that is, the initial process):
+{1}new skUE: skey;
+{2}new skNW: skey;
+{3}new sskNW: sskey;
+{4}new sskUE: sskey;
+{5}let pkUE: pkey = pk(skUE) in
+{6}out(c, pkUE);
+{7}let pkNW: pkey = pk(skNW) in
+{8}out(c, pkNW);
+{9}let spkNW: spkey = spk(sskNW) in
+{10}out(c, spkNW);
+{11}let spkUE: spkey = spk(sskUE) in
+{12}out(c, spkUE);
+(
+    {13}!
+    {14}let sskUE_1: sskey = sskUE in
+    {15}let skUE_1: skey = skUE in
+    {16}new Rue: bitstring;
+    {17}out(c, aenc((SUPI,Rue),pkNW));
+    {18}in(c, y: bitstring);
+    {19}let (Startx: bitstring,=Rue) = adec(y,skUE_1) in
+    {20}new Rue1: bitstring;
+    {21}out(c, aenc((Rue1,Startx),pkNW));
+    {22}in(c, (x: bitstring,CertNWx: bitstring));
+    {23}let (Rausfx: bitstring,=Rue1) = adec(x,skUE_1) in
+    {24}let =CertNW = CertNWx in
+    {25}new Rprekey: bitstring;
+    {26}let prekey_1: bitstring = Rprekey in
+    {27}let a: bitstring = h(Rue1,Rausfx,Rprekey) in
+    {28}let Ksession_1: key = a in
+    {29}let HSUE: bitstring = (Startx,Rue1,Rausfx,CertNWx) in
+    {30}event acceptsUE(SUPI);
+    {31}event sendPrek(Rprekey);
+    {32}out(c, (aenc((Rprekey,Rue),pkNW),CertUE,sign(HSUE,sskUE_1),senc(HSUE,Ksession_1)));
+    {33}in(c, HSNWx: bitstring);
+    {34}let (=HSUE,=SUPI) = sdec(HSNWx,Ksession_1) in
+    {35}event termUE(Startx)
+) | (
+    {36}!
+    {37}let skNW_1: skey = skNW in
+    {38}let sskNW_1: sskey = sskNW in
+    {39}in(c, x_1: bitstring);
+    {40}let (SUPIx: bitstring,Ruex: bitstring) = adec(x_1,skNW_1) in
+    {41}if (SUPIx = SUPI) then
+    {42}new start: bitstring;
+    {43}out(c, aenc((start,Ruex),pkUE));
+    {44}in(c, v: bitstring);
+    {45}let (Rue1x: bitstring,=start) = adec(v,skNW_1) in
+    {46}new Rausf: bitstring;
+    {47}out(c, (aenc((Rausf,Rue1x),pkUE),CertNW));
+    {48}in(c, (y_1: bitstring,CertUEx: bitstring,t: bitstring,z: bitstring));
+    {49}let =CertUE = CertUEx in
+    {50}let (Rprekeyx: bitstring,=Ruex) = adec(y_1,skNW_1) in
+    {51}let b: bitstring = h(Rue1x,Rausf,Rprekeyx) in
+    {52}let Ksessionx: key = b in
+    {53}new HSNW: bitstring;
+    {54}let HSNW_1: bitstring = (start,Rue1x,Rausf,CertNW) in
+    {55}let =HSNW_1 = sdec(z,Ksessionx) in
+    {56}let =HSNW_1 = checksign(t,spkUE) in
+    {57}event acceptPrek(Rprekeyx);
+    {58}event acceptsNW(start);
+    {59}out(c, senc((HSNW_1,SUPIx),Ksessionx));
+    {60}event termNW(SUPIx)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skUE: skey;
+{2}new skNW: skey;
+{3}new sskNW: sskey;
+{4}new sskUE: sskey;
+{5}let pkUE: pkey = pk(skUE) in
+{6}out(c, pkUE);
+{7}let pkNW: pkey = pk(skNW) in
+{8}out(c, pkNW);
+{9}let spkNW: spkey = spk(sskNW) in
+{10}out(c, spkNW);
+{11}let spkUE: spkey = spk(sskUE) in
+{12}out(c, spkUE);
+(
+    {13}!
+    {16}new Rue: bitstring;
+    {17}out(c, aenc((SUPI,Rue),pkNW));
+    {18}in(c, y: bitstring);
+    {15}let skUE_1: skey = skUE in
+    {19}let (Startx: bitstring,=Rue) = adec(y,skUE_1) in
+    {20}new Rue1: bitstring;
+    {21}out(c, aenc((Rue1,Startx),pkNW));
+    {22}in(c, (x: bitstring,CertNWx: bitstring));
+    {23}let (Rausfx: bitstring,=Rue1) = adec(x,skUE_1) in
+    {24}let =CertNW = CertNWx in
+    {25}new Rprekey: bitstring;
+    {30}event acceptsUE(SUPI);
+    {31}event sendPrek(Rprekey);
+    {29}let HSUE: bitstring = (Startx,Rue1,Rausfx,CertNWx) in
+    {27}let a: bitstring = h(Rue1,Rausfx,Rprekey) in
+    {28}let Ksession_1: key = a in
+    {14}let sskUE_1: sskey = sskUE in
+    {32}out(c, (aenc((Rprekey,Rue),pkNW),CertUE,sign(HSUE,sskUE_1),senc(HSUE,Ksession_1)));
+    {33}in(c, HSNWx: bitstring);
+    {34}let (=HSUE,=SUPI) = sdec(HSNWx,Ksession_1) in
+    {35}event termUE(Startx)
+) | (
+    {36}!
+    {39}in(c, x_1: bitstring);
+    {37}let skNW_1: skey = skNW in
+    {40}let (SUPIx: bitstring,Ruex: bitstring) = adec(x_1,skNW_1) in
+    {41}if (SUPIx = SUPI) then
+    {42}new start: bitstring;
+    {43}out(c, aenc((start,Ruex),pkUE));
+    {44}in(c, v: bitstring);
+    {45}let (Rue1x: bitstring,=start) = adec(v,skNW_1) in
+    {46}new Rausf: bitstring;
+    {47}out(c, (aenc((Rausf,Rue1x),pkUE),CertNW));
+    {48}in(c, (y_1: bitstring,CertUEx: bitstring,t: bitstring,z: bitstring));
+    {49}let =CertUE = CertUEx in
+    {50}let (Rprekeyx: bitstring,=Ruex) = adec(y_1,skNW_1) in
+    {53}new HSNW: bitstring;
+    {54}let HSNW_1: bitstring = (start,Rue1x,Rausf,CertNW) in
+    {51}let b: bitstring = h(Rue1x,Rausf,Rprekeyx) in
+    {52}let Ksessionx: key = b in
+    {55}let =HSNW_1 = sdec(z,Ksessionx) in
+    {56}let =HSNW_1 = checksign(t,spkUE) in
+    {57}event acceptPrek(Rprekeyx);
+    {58}event acceptsNW(start);
+    {59}out(c, senc((HSNW_1,SUPIx),Ksessionx));
+    {60}event termNW(SUPIx)
+)
+
+-- Query not attacker(prekey[]) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query not attacker(prekey[])
+RESULT not attacker(prekey[]) is true.
+-- Query not attacker(Ksession[]) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query not attacker(Ksession[])
+RESULT not attacker(Ksession[]) is true.
+-- Query not attacker(SUPI[]) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query not attacker(SUPI[])
+RESULT not attacker(SUPI[]) is true.
+-- Query inj-event(acceptPrek(x_2)) ==> inj-event(sendPrek(x_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query inj-event(acceptPrek(x_2)) ==> inj-event(sendPrek(x_2))
+goal reachable: b-inj-event(sendPrek(Rprekey_1),@occ31_1) -> inj-event(acceptPrek(Rprekey_1),@occ57_1)
+The hypothesis occurs strictly before the conclusion.
+Abbreviations:
+Rue_1 = Rue[!1 = @sid]
+start_1 = start[x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+Rue1_1 = Rue1[y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+Rausf_1 = Rausf[v = aenc((Rue1_1,start_1),pk(skNW[])),x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+Rprekey_1 = Rprekey[CertNWx = CertNW[],x = aenc((Rausf_1,Rue1_1),pk(skUE[])),y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+@occ57_1 = @occ57[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y_1 = aenc((Rprekey_1,Rue_1),pk(skNW[])),v = aenc((Rue1_1,start_1),pk(skNW[])),x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+@occ31_1 = @occ31[CertNWx = CertNW[],x = aenc((Rausf_1,Rue1_1),pk(skUE[])),y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+RESULT inj-event(acceptPrek(x_2)) ==> inj-event(sendPrek(x_2)) is true.
+-- Query inj-event(termNW(x_2)) ==> inj-event(acceptsUE(x_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query inj-event(termNW(x_2)) ==> inj-event(acceptsUE(x_2))
+goal reachable: b-inj-event(acceptsUE(SUPI[]),@occ30_1) -> inj-event(termNW(SUPI[]),@occ60_1)
+The hypothesis occurs strictly before the conclusion.
+Abbreviations:
+Rue_1 = Rue[!1 = @sid]
+start_1 = start[x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+Rue1_1 = Rue1[y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+Rausf_1 = Rausf[v = aenc((Rue1_1,start_1),pk(skNW[])),x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+Rprekey_1 = Rprekey[CertNWx = CertNW[],x = aenc((Rausf_1,Rue1_1),pk(skUE[])),y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+@occ60_1 = @occ60[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y_1 = aenc((Rprekey_1,Rue_1),pk(skNW[])),v = aenc((Rue1_1,start_1),pk(skNW[])),x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+@occ30_1 = @occ30[CertNWx = CertNW[],x = aenc((Rausf_1,Rue1_1),pk(skUE[])),y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+RESULT inj-event(termNW(x_2)) ==> inj-event(acceptsUE(x_2)) is true.
+-- Query inj-event(termUE(x_2)) ==> inj-event(acceptsNW(x_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query inj-event(termUE(x_2)) ==> inj-event(acceptsNW(x_2))
+goal reachable: b-inj-event(acceptsNW(start_1),@occ58_1) -> inj-event(termUE(start_1),@occ35_1)
+The hypothesis occurs strictly before the conclusion.
+Abbreviations:
+Rue_1 = Rue[!1 = @sid]
+start_1 = start[x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+Rue1_1 = Rue1[y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+Rausf_1 = Rausf[v = aenc((Rue1_1,start_1),pk(skNW[])),x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+Rprekey_1 = Rprekey[CertNWx = CertNW[],x = aenc((Rausf_1,Rue1_1),pk(skUE[])),y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+@occ35_1 = @occ35[HSNWx = senc(((start_1,Rue1_1,Rausf_1,CertNW[]),SUPI[]),h(Rue1_1,Rausf_1,Rprekey_1)),CertNWx = CertNW[],x = aenc((Rausf_1,Rue1_1),pk(skUE[])),y = aenc((start_1,Rue_1),pk(skUE[])),!1 = @sid]
+@occ58_1 = @occ58[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y_1 = aenc((Rprekey_1,Rue_1),pk(skNW[])),v = aenc((Rue1_1,start_1),pk(skNW[])),x_1 = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
+RESULT inj-event(termUE(x_2)) ==> inj-event(acceptsNW(x_2)) is true.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query not attacker(prekey[]) is true.
+
+Query not attacker(Ksession[]) is true.
+
+Query not attacker(SUPI[]) is true.
+
+Query inj-event(acceptPrek(x_2)) ==> inj-event(sendPrek(x_2)) is true.
+
+Query inj-event(termNW(x_2)) ==> inj-event(acceptsUE(x_2)) is true.
+
+Query inj-event(termUE(x_2)) ==> inj-event(acceptsNW(x_2)) is true.
+
+--------------------------------------------------------------
+
