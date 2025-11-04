@@ -1,453 +1,167 @@
-File "C:\Users\Dell\OneDrive\Documents\proverif\proverifbin2.05\5G_EAP-TLS_protocol_original.pv", line 73, characters 6-11:
-Warning: identifier prekey rebound.
-File "C:\Users\Dell\OneDrive\Documents\proverif\proverifbin2.05\5G_EAP-TLS_protocol_original.pv", line 75, characters 6-13:
-Warning: identifier Ksession rebound.
-File "C:\Users\Dell\OneDrive\Documents\proverif\proverifbin2.05\5G_EAP-TLS_protocol_original.pv", line 99, characters 6-9:
-Warning: identifier HSNW rebound.
-Process 0 (that is, the initial process):
-{1}new skUE: skey;
-{2}new skNW: skey;
-{3}new sskNW: sskey;
-{4}new sskUE: sskey;
-{5}let pkUE: pkey = pk(skUE) in
-{6}out(c, pkUE);
-{7}let pkNW: pkey = pk(skNW) in
-{8}out(c, pkNW);
-{9}let spkNW: spkey = spk(sskNW) in
-{10}out(c, spkNW);
-{11}let spkUE: spkey = spk(sskUE) in
-{12}out(c, spkUE);
-(
-    {13}!
-    {14}let sskUE_1: sskey = sskUE in
-    {15}new Rue: bitstring;
-    {16}out(c, aenc((SUPI,Rue),pkNW));
-    {17}in(c, Startx: bitstring);
-    {18}new Rue1: bitstring;
-    {19}out(c, Rue1);
-    {20}in(c, (Rausfx: bitstring,CertNWx: bitstring));
-    {21}let =CertNW = CertNWx in
-    {22}new Rprekey: bitstring;
-    {23}let prekey_1: bitstring = Rprekey in
-    {24}let a: bitstring = h(Rue1,Rausfx,Rprekey) in
-    {25}let Ksession_1: key = a in
-    {26}let HSUE: bitstring = (Startx,Rue1,Rausfx,CertNWx) in
-    {27}event acceptsUE(SUPI);
-    {28}event sendPrek(Rprekey);
-    {29}out(c, (aenc(Rprekey,pkNW),CertUE,sign(HSUE,sskUE_1),senc(HSUE,Ksession_1)));
-    {30}in(c, HSNWx: bitstring);
-    {31}let =HSUE = sdec(HSNWx,Ksession_1) in
-    {32}event termUE(Startx)
-) | (
-    {33}!
-    {34}let skNW_1: skey = skNW in
-    {35}let sskNW_1: sskey = sskNW in
-    {36}in(c, x: bitstring);
-    {37}let (SUPIx: bitstring,Ruex: bitstring) = adec(x,skNW_1) in
-    {38}if (SUPIx = SUPI) then
-    {39}new start: bitstring;
-    {40}out(c, start);
-    {41}in(c, Rue1x: bitstring);
-    {42}new Rausf: bitstring;
-    {43}out(c, (Rausf,CertNW));
-    {44}in(c, (y: bitstring,CertUEx: bitstring,t: bitstring,z: bitstring));
-    {45}let =CertUE = CertUEx in
-    {46}let Rprekeyx: bitstring = adec(y,skNW_1) in
-    {47}let b: bitstring = h(Rue1x,Rausf,Rprekeyx) in
-    {48}let Ksessionx: key = b in
-    {49}new HSNW: bitstring;
-    {50}let HSNW_1: bitstring = (start,Rue1x,Rausf,CertNW) in
-    {51}let =HSNW_1 = sdec(z,Ksessionx) in
-    {52}let =HSNW_1 = checksign(t,spkUE) in
-    {53}event acceptPrek(Rprekeyx);
-    {54}event acceptsNW(start);
-    {55}out(c, senc(HSNW_1,Ksessionx));
-    {56}event termNW(SUPIx)
-)
-
---  Process 1 (that is, process 0, with let moved downwards):
-{1}new skUE: skey;
-{2}new skNW: skey;
-{3}new sskNW: sskey;
-{4}new sskUE: sskey;
-{5}let pkUE: pkey = pk(skUE) in
-{6}out(c, pkUE);
-{7}let pkNW: pkey = pk(skNW) in
-{8}out(c, pkNW);
-{9}let spkNW: spkey = spk(sskNW) in
-{10}out(c, spkNW);
-{11}let spkUE: spkey = spk(sskUE) in
-{12}out(c, spkUE);
-(
-    {13}!
-    {15}new Rue: bitstring;
-    {16}out(c, aenc((SUPI,Rue),pkNW));
-    {17}in(c, Startx: bitstring);
-    {18}new Rue1: bitstring;
-    {19}out(c, Rue1);
-    {20}in(c, (Rausfx: bitstring,CertNWx: bitstring));
-    {21}let =CertNW = CertNWx in
-    {22}new Rprekey: bitstring;
-    {27}event acceptsUE(SUPI);
-    {28}event sendPrek(Rprekey);
-    {26}let HSUE: bitstring = (Startx,Rue1,Rausfx,CertNWx) in
-    {24}let a: bitstring = h(Rue1,Rausfx,Rprekey) in
-    {25}let Ksession_1: key = a in
-    {14}let sskUE_1: sskey = sskUE in
-    {29}out(c, (aenc(Rprekey,pkNW),CertUE,sign(HSUE,sskUE_1),senc(HSUE,Ksession_1)));
-    {30}in(c, HSNWx: bitstring);
-    {31}let =HSUE = sdec(HSNWx,Ksession_1) in
-    {32}event termUE(Startx)
-) | (
-    {33}!
-    {36}in(c, x: bitstring);
-    {34}let skNW_1: skey = skNW in
-    {37}let (SUPIx: bitstring,Ruex: bitstring) = adec(x,skNW_1) in
-    {38}if (SUPIx = SUPI) then
-    {39}new start: bitstring;
-    {40}out(c, start);
-    {41}in(c, Rue1x: bitstring);
-    {42}new Rausf: bitstring;
-    {43}out(c, (Rausf,CertNW));
-    {44}in(c, (y: bitstring,CertUEx: bitstring,t: bitstring,z: bitstring));
-    {45}let =CertUE = CertUEx in
-    {46}let Rprekeyx: bitstring = adec(y,skNW_1) in
-    {49}new HSNW: bitstring;
-    {50}let HSNW_1: bitstring = (start,Rue1x,Rausf,CertNW) in
-    {47}let b: bitstring = h(Rue1x,Rausf,Rprekeyx) in
-    {48}let Ksessionx: key = b in
-    {51}let =HSNW_1 = sdec(z,Ksessionx) in
-    {52}let =HSNW_1 = checksign(t,spkUE) in
-    {53}event acceptPrek(Rprekeyx);
-    {54}event acceptsNW(start);
-    {55}out(c, senc(HSNW_1,Ksessionx));
-    {56}event termNW(SUPIx)
-)
-
--- Query not attacker(prekey[]) in process 1.
-Translating the process into Horn clauses...
-Completing...
-Starting query not attacker(prekey[])
-RESULT not attacker(prekey[]) is true.
--- Query not attacker(Ksession[]) in process 1.
-Translating the process into Horn clauses...
-Completing...
-Starting query not attacker(Ksession[])
-RESULT not attacker(Ksession[]) is true.
--- Query not attacker(SUPI[]) in process 1.
-Translating the process into Horn clauses...
-Completing...
-Starting query not attacker(SUPI[])
-RESULT not attacker(SUPI[]) is true.
--- Query inj-event(acceptPrek(x_1)) ==> inj-event(sendPrek(x_1)) in process 1.
-Translating the process into Horn clauses...
-Completing...
-Starting query inj-event(acceptPrek(x_1)) ==> inj-event(sendPrek(x_1))
-goal reachable: b-inj-event(sendPrek(Rprekey_1),@occ28_1) && attacker(x_1) -> inj-event(acceptPrek(x_1),@occ53_1)
-Abbreviations:
-Rue_1 = Rue[!1 = @sid]
-start_1 = start[x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rue1_1 = Rue1[Startx = start_1,!1 = @sid_2]
-Rausf_1 = Rausf[Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-@occ53_1 = @occ53[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y = aenc(x_1,pk(skNW[])),Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rprekey_1 = Rprekey[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-@occ28_1 = @occ28[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-
-Derivation:
-Abbreviations:
-Rue_1 = Rue[!1 = @sid]
-start_1 = start[x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rue1_1 = Rue1[Startx = start_1,!1 = @sid_2]
-Rausf_1 = Rausf[Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-@occ53_1 = @occ53[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y = aenc(x_1,pk(skNW[])),Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rprekey_1 = Rprekey[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-@occ28_1 = @occ28[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-
-1. The message aenc((SUPI[],Rue_1),pk(skNW[])) may be sent to the attacker at output {16}.
-attacker(aenc((SUPI[],Rue_1),pk(skNW[]))).
-
-2. The message aenc((SUPI[],Rue_1),pk(skNW[])) that the attacker may have by 1 may be received at input {36}.
-So the message start_1 may be sent to the attacker at output {40}.
-attacker(start_1).
-
-3. The message start_1 that the attacker may have by 2 may be received at input {17}.
-So the message Rue1_1 may be sent to the attacker at output {19}.
-attacker(Rue1_1).
-
-4. We assume as hypothesis that
-attacker(x_1).
-
-5. The message aenc((SUPI[],Rue_1),pk(skNW[])) that the attacker may have by 1 may be received at input {36}.
-The message Rue1_1 that the attacker may have by 3 may be received at input {41}.
-So the message (Rausf_1,CertNW[]) may be sent to the attacker at output {43}.
-attacker((Rausf_1,CertNW[])).
-
-6. By 5, the attacker may know (Rausf_1,CertNW[]).
-Using the function 1-proj-2-tuple the attacker may obtain Rausf_1.
-attacker(Rausf_1).
-
-7. By 3, the attacker may know Rue1_1.
-By 6, the attacker may know Rausf_1.
-By 4, the attacker may know x_1.
-Using the function h the attacker may obtain h(Rue1_1,Rausf_1,x_1).
-attacker(h(Rue1_1,Rausf_1,x_1)).
-
-8. The attacker initially knows CertNW[].
-attacker(CertNW[]).
-
-9. By 2, the attacker may know start_1.
-By 3, the attacker may know Rue1_1.
-By 6, the attacker may know Rausf_1.
-By 8, the attacker may know CertNW[].
-Using the function 4-tuple the attacker may obtain (start_1,Rue1_1,Rausf_1,CertNW[]).
-attacker((start_1,Rue1_1,Rausf_1,CertNW[])).
-
-10. By 9, the attacker may know (start_1,Rue1_1,Rausf_1,CertNW[]).
-By 7, the attacker may know h(Rue1_1,Rausf_1,x_1).
-Using the function senc the attacker may obtain senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1)).
-attacker(senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1))).
-
-11. The message start_1 that the attacker may have by 2 may be received at input {17}.
-The message (Rausf_1,CertNW[]) that the attacker may have by 5 may be received at input {20}.
-The event sendPrek(Rprekey_1) (with occurrence name @occ28_1) may be executed at {28}.
-So the message (aenc(Rprekey_1,pk(skNW[])),CertUE[],sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1))) may be sent to the attacker at output {29}.
-attacker((aenc(Rprekey_1,pk(skNW[])),CertUE[],sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1)))).
-
-12. By 11, the attacker may know (aenc(Rprekey_1,pk(skNW[])),CertUE[],sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1))).
-Using the function 3-proj-4-tuple the attacker may obtain sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]).
-attacker(sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[])).
-
-13. The attacker initially knows CertUE[].
-attacker(CertUE[]).
-
-14. The message pk(skNW[]) may be sent to the attacker at output {8}.
-attacker(pk(skNW[])).
-
-15. By 4, the attacker may know x_1.
-By 14, the attacker may know pk(skNW[]).
-Using the function aenc the attacker may obtain aenc(x_1,pk(skNW[])).
-attacker(aenc(x_1,pk(skNW[]))).
-
-16. By 15, the attacker may know aenc(x_1,pk(skNW[])).
-By 13, the attacker may know CertUE[].
-By 12, the attacker may know sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]).
-By 10, the attacker may know senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1)).
-Using the function 4-tuple the attacker may obtain (aenc(x_1,pk(skNW[])),CertUE[],sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1))).
-attacker((aenc(x_1,pk(skNW[])),CertUE[],sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1)))).
-
-17. The message aenc((SUPI[],Rue_1),pk(skNW[])) that the attacker may have by 1 may be received at input {36}.
-The message Rue1_1 that the attacker may have by 3 may be received at input {41}.
-The message (aenc(x_1,pk(skNW[])),CertUE[],sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,x_1))) that the attacker may have by 16 may be received at input {44}.
-So event acceptPrek(x_1) may be executed at {53} in session @sid_1.
-inj-event(acceptPrek(x_1),@occ53_1).
-
-18. By 17, inj-event(acceptPrek(x_1),@occ53_1).
-The goal is reached, represented in the following fact:
-inj-event(acceptPrek(x_1),@occ53_1).
-
-
-A more detailed output of the traces is available with
-  set traceDisplay = long.
-
-new skUE: skey creating skUE_1 at {1}
-
-new skNW: skey creating skNW_2 at {2}
-
-new sskNW: sskey creating sskNW_2 at {3}
-
-new sskUE: sskey creating sskUE_2 at {4}
-
-out(c, ~M) with ~M = pk(skUE_1) at {6}
-
-out(c, ~M_1) with ~M_1 = pk(skNW_2) at {8}
-
-out(c, ~M_2) with ~M_2 = spk(sskNW_2) at {10}
-
-out(c, ~M_3) with ~M_3 = spk(sskUE_2) at {12}
-
-new Rue: bitstring creating Rue_2 at {15} in copy a_1
-
-out(c, ~M_4) with ~M_4 = aenc((SUPI,Rue_2),pk(skNW_2)) at {16} in copy a_1
-
-new Rue: bitstring creating Rue_3 at {15} in copy a_2
-
-out(c, ~M_5) with ~M_5 = aenc((SUPI,Rue_3),pk(skNW_2)) at {16} in copy a_2
-
-in(c, ~M_4) with ~M_4 = aenc((SUPI,Rue_2),pk(skNW_2)) at {36} in copy a_3
-
-new start: bitstring creating start_2 at {39} in copy a_3
-
-out(c, ~M_6) with ~M_6 = start_2 at {40} in copy a_3
-
-in(c, ~M_6) with ~M_6 = start_2 at {17} in copy a_2
-
-new Rue1: bitstring creating Rue1_2 at {18} in copy a_2
-
-out(c, ~M_7) with ~M_7 = Rue1_2 at {19} in copy a_2
-
-in(c, ~M_7) with ~M_7 = Rue1_2 at {41} in copy a_3
-
-new Rausf: bitstring creating Rausf_2 at {42} in copy a_3
-
-out(c, (~M_8,~M_9)) with ~M_8 = Rausf_2, ~M_9 = CertNW at {43} in copy a_3
-
-in(c, (~M_8,CertNW)) with ~M_8 = Rausf_2 at {20} in copy a_2
-
-new Rprekey: bitstring creating Rprekey_2 at {22} in copy a_2
-
-event acceptsUE(SUPI) at {27} in copy a_2
-
-event sendPrek(Rprekey_2) at {28} in copy a_2
-
-out(c, (~M_10,~M_11,~M_12,~M_13)) with ~M_10 = aenc(Rprekey_2,pk(skNW_2)), ~M_11 = CertUE, ~M_12 = sign((start_2,Rue1_2,Rausf_2,CertNW),sskUE_2), ~M_13 = senc((start_2,Rue1_2,Rausf_2,CertNW),h(Rue1_2,Rausf_2,Rprekey_2)) at {29} in copy a_2
-
-in(c, (aenc(a_4,~M_1),CertUE,~M_12,senc((~M_6,~M_7,~M_8,CertNW),h(~M_7,~M_8,a_4)))) with aenc(a_4,~M_1) = aenc(a_4,pk(skNW_2)), ~M_12 = sign((start_2,Rue1_2,Rausf_2,CertNW),sskUE_2), senc((~M_6,~M_7,~M_8,CertNW),h(~M_7,~M_8,a_4)) = senc((start_2,Rue1_2,Rausf_2,CertNW),h(Rue1_2,Rausf_2,a_4)) at {44} in copy a_3
-
-new HSNW: bitstring creating HSNW_2 at {49} in copy a_3
-
-event acceptPrek(a_4) at {53} in copy a_3 (goal)
-
-The event acceptPrek(a_4) is executed at {53} in copy a_3.
-A trace has been found.
-RESULT inj-event(acceptPrek(x_1)) ==> inj-event(sendPrek(x_1)) is false.
-RESULT (even event(acceptPrek(x_1)) ==> event(sendPrek(x_1)) is false.)
--- Query inj-event(termNW(x_1)) ==> inj-event(acceptsUE(x_1)) in process 1.
-Translating the process into Horn clauses...
-Completing...
-Starting query inj-event(termNW(x_1)) ==> inj-event(acceptsUE(x_1))
-goal reachable: b-inj-event(acceptsUE(SUPI[]),@occ27_1) && attacker(Rprekeyx_1) -> inj-event(termNW(SUPI[]),@occ56_1)
-The 1st hypothesis occurs strictly before the conclusion.
-The 2nd hypothesis occurs before the conclusion.
-Abbreviations:
-Rue_1 = Rue[!1 = @sid]
-start_1 = start[x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rue1_1 = Rue1[Startx = start_1,!1 = @sid_2]
-Rausf_1 = Rausf[Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-@occ56_1 = @occ56[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekeyx_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y = aenc(Rprekeyx_1,pk(skNW[])),Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-@occ27_1 = @occ27[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-goal reachable: b-inj-event(acceptsUE(SUPI[]),@occ27_1) -> inj-event(termNW(SUPI[]),@occ56_1)
-The hypothesis occurs strictly before the conclusion.
-Abbreviations:
-Rue_1 = Rue[!1 = @sid]
-start_1 = start[x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rue1_1 = Rue1[Startx = start_1,!1 = @sid_2]
-Rausf_1 = Rausf[Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-Rprekey_1 = Rprekey[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-@occ56_1 = @occ56[z = senc((start_1,Rue1_1,Rausf_1,CertNW[]),h(Rue1_1,Rausf_1,Rprekey_1)),t = sign((start_1,Rue1_1,Rausf_1,CertNW[]),sskUE[]),CertUEx = CertUE[],y = aenc(Rprekey_1,pk(skNW[])),Rue1x = Rue1_1,x = aenc((SUPI[],Rue_1),pk(skNW[])),!1 = @sid_1]
-@occ27_1 = @occ27[CertNWx = CertNW[],Rausfx = Rausf_1,Startx = start_1,!1 = @sid_2]
-RESULT inj-event(termNW(x_1)) ==> inj-event(acceptsUE(x_1)) is true.
--- Query inj-event(termUE(x_1)) ==> inj-event(acceptsNW(x_1)) in process 1.
-Translating the process into Horn clauses...
-Completing...
-Starting query inj-event(termUE(x_1)) ==> inj-event(acceptsNW(x_1))
-goal reachable: attacker(Rausfx_1) && attacker(x_1) -> inj-event(termUE(x_1),@occ32_1)
-Abbreviations:
-Rue1_1 = Rue1[Startx = x_1,!1 = @sid]
-Rprekey_1 = Rprekey[CertNWx = CertNW[],Rausfx = Rausfx_1,Startx = x_1,!1 = @sid]
-@occ32_1 = @occ32[HSNWx = senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1)),CertNWx = CertNW[],Rausfx = Rausfx_1,Startx = x_1,!1 = @sid]
-
-Derivation:
-Abbreviations:
-Rue1_1 = Rue1[Startx = x_1,!1 = @sid]
-Rprekey_1 = Rprekey[CertNWx = CertNW[],Rausfx = Rausfx_1,Startx = x_1,!1 = @sid]
-@occ32_1 = @occ32[HSNWx = senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1)),CertNWx = CertNW[],Rausfx = Rausfx_1,Startx = x_1,!1 = @sid]
-
-1. We assume as hypothesis that
-attacker(x_1).
-
-2. The attacker initially knows CertNW[].
-attacker(CertNW[]).
-
-3. We assume as hypothesis that
-attacker(Rausfx_1).
-
-4. By 3, the attacker may know Rausfx_1.
-By 2, the attacker may know CertNW[].
-Using the function 2-tuple the attacker may obtain (Rausfx_1,CertNW[]).
-attacker((Rausfx_1,CertNW[])).
-
-5. The message x_1 that the attacker may have by 1 may be received at input {17}.
-The message (Rausfx_1,CertNW[]) that the attacker may have by 4 may be received at input {20}.
-So the message (aenc(Rprekey_1,pk(skNW[])),CertUE[],sign((x_1,Rue1_1,Rausfx_1,CertNW[]),sskUE[]),senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1))) may be sent to the attacker at output {29}.
-attacker((aenc(Rprekey_1,pk(skNW[])),CertUE[],sign((x_1,Rue1_1,Rausfx_1,CertNW[]),sskUE[]),senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1)))).
-
-6. By 5, the attacker may know (aenc(Rprekey_1,pk(skNW[])),CertUE[],sign((x_1,Rue1_1,Rausfx_1,CertNW[]),sskUE[]),senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1))).
-Using the function 4-proj-4-tuple the attacker may obtain senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1)).
-attacker(senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1))).
-
-7. The message x_1 that the attacker may have by 1 may be received at input {17}.
-The message (Rausfx_1,CertNW[]) that the attacker may have by 4 may be received at input {20}.
-The message senc((x_1,Rue1_1,Rausfx_1,CertNW[]),h(Rue1_1,Rausfx_1,Rprekey_1)) that the attacker may have by 6 may be received at input {30}.
-So event termUE(x_1) may be executed at {32} in session @sid.
-inj-event(termUE(x_1),@occ32_1).
-
-8. By 7, inj-event(termUE(x_1),@occ32_1).
-The goal is reached, represented in the following fact:
-inj-event(termUE(x_1),@occ32_1).
-
-
-A more detailed output of the traces is available with
-  set traceDisplay = long.
-
-new skUE: skey creating skUE_1 at {1}
-
-new skNW: skey creating skNW_2 at {2}
-
-new sskNW: sskey creating sskNW_2 at {3}
-
-new sskUE: sskey creating sskUE_2 at {4}
-
-out(c, ~M) with ~M = pk(skUE_1) at {6}
-
-out(c, ~M_1) with ~M_1 = pk(skNW_2) at {8}
-
-out(c, ~M_2) with ~M_2 = spk(sskNW_2) at {10}
-
-out(c, ~M_3) with ~M_3 = spk(sskUE_2) at {12}
-
-new Rue: bitstring creating Rue_1 at {15} in copy a_1
-
-out(c, ~M_4) with ~M_4 = aenc((SUPI,Rue_1),pk(skNW_2)) at {16} in copy a_1
-
-in(c, a_2) at {17} in copy a_1
-
-new Rue1: bitstring creating Rue1_2 at {18} in copy a_1
-
-out(c, ~M_5) with ~M_5 = Rue1_2 at {19} in copy a_1
-
-in(c, (a_3,CertNW)) at {20} in copy a_1
-
-new Rprekey: bitstring creating Rprekey_2 at {22} in copy a_1
-
-event acceptsUE(SUPI) at {27} in copy a_1
-
-event sendPrek(Rprekey_2) at {28} in copy a_1
-
-out(c, (~M_6,~M_7,~M_8,~M_9)) with ~M_6 = aenc(Rprekey_2,pk(skNW_2)), ~M_7 = CertUE, ~M_8 = sign((a_2,Rue1_2,a_3,CertNW),sskUE_2), ~M_9 = senc((a_2,Rue1_2,a_3,CertNW),h(Rue1_2,a_3,Rprekey_2)) at {29} in copy a_1
-
-in(c, ~M_9) with ~M_9 = senc((a_2,Rue1_2,a_3,CertNW),h(Rue1_2,a_3,Rprekey_2)) at {30} in copy a_1
-
-event termUE(a_2) at {32} in copy a_1 (goal)
-
-The event termUE(a_2) is executed at {32} in copy a_1.
-A trace has been found.
-RESULT inj-event(termUE(x_1)) ==> inj-event(acceptsNW(x_1)) is false.
-RESULT (even event(termUE(x_1)) ==> event(acceptsNW(x_1)) is false.)
-
---------------------------------------------------------------
-Verification summary:
-
-Query not attacker(prekey[]) is true.
-
-Query not attacker(Ksession[]) is true.
-
-Query not attacker(SUPI[]) is true.
-
-Query inj-event(acceptPrek(x_1)) ==> inj-event(sendPrek(x_1)) is false.
-
-Query inj-event(termNW(x_1)) ==> inj-event(acceptsUE(x_1)) is true.
-
-Query inj-event(termUE(x_1)) ==> inj-event(acceptsNW(x_1)) is false.
-
---------------------------------------------------------------
+set reconstructTrace = true.
+
+(* Mã hóa đối xứng *)
+type key.
+fun senc(bitstring, key): bitstring.
+reduc forall m: bitstring, k: key; sdec(senc(m,k),k) = m.
+
+(* Mã hóa bất đối xứng *)
+type skey.
+type pkey.
+
+fun pk(skey): pkey.
+fun aenc(bitstring, pkey): bitstring.
+
+reduc forall m: bitstring, sk: skey; adec(aenc(m,pk(sk)),sk) = m.
+
+(* Hàm băm *)
+fun h(bitstring,bitstring,bitstring): bitstring.
+
+(* Hàm chuyển đổi kiểu *)
+fun b_to_k(bitstring):key [data,typeConverter].
+
+(* Chữ ký số *)
+type sskey.
+type spkey.
+
+fun spk(sskey): spkey.
+fun sign(bitstring, sskey): bitstring.
+
+reduc forall m: bitstring, k: sskey; getmess(sign(m,k)) = m.
+reduc forall m: bitstring, k: sskey; checksign(sign(m,k),spk(k)) = m.
+
+(* Khai báo kênh *)
+free c1:channel.
+free c2:channel [private].
+free c3:channel [private].
+free CertAUSF:bitstring.
+free CertUE:bitstring.
+free SUPI:bitstring [private].
+free Ksession:key [private].
+free prekey:bitstring [private].
+
+(* Events và queries *)
+query attacker(prekey).
+query attacker(Ksession).
+query attacker(SUPI).
+
+(*set maxDepth = 1000.*)
+(*set traceDisplay = long.*)
+
+event sendPrek(bitstring).
+event acceptPrek(bitstring).
+query x:bitstring; inj-event(acceptPrek(x)) ==> inj-event(sendPrek(x)).
+
+event acceptsUE(bitstring).
+event termAUSF(bitstring).
+query x:bitstring; inj-event(termAUSF(x)) ==> inj-event(acceptsUE(x)).
+
+event acceptsAUSF(bitstring).
+event termUE(bitstring).
+query x:bitstring; inj-event(termUE(x)) ==> inj-event(acceptsAUSF(x)).
+
+(* UE process *)
+let UE(pkAUSF:pkey, pkUDM:pkey, spkAUSF:spkey, spkUE:spkey, sskUE:sskey, skUE:skey) =
+  new Rue:bitstring;
+  out(c1, aenc((SUPI, Rue), pkUDM));
+  in(c1, y:bitstring);
+  let (Startx:bitstring, RueCheck:bitstring) = adec(y, skUE) in
+  let (=Rue) = RueCheck in
+  new Rue1:bitstring;
+  out(c1, aenc((Rue1, Startx), pkAUSF));
+  in(c1, (x:bitstring, CertAUSFx:bitstring));
+  let (Rausfx:bitstring, Rue1Check:bitstring) = adec(x, skUE) in
+  let (=Rue1) = Rue1Check in
+  let (=CertAUSF) = CertAUSFx in
+  new Rprekey:bitstring;
+  let a = h(Rue1, Rausfx, Rprekey) in
+  let Ksession = b_to_k(a) in
+  let HSUE = (Startx, Rue1, Rausfx, CertAUSFx) in
+  event acceptsUE(Rue1);
+  event sendPrek(Rprekey);
+  out(c1, (aenc((Rprekey, Rue), pkAUSF), CertUE, sign(HSUE, sskUE), senc(HSUE, Ksession)));
+  in(c1, HSAUSFx:bitstring);
+  let (HSUECheck:bitstring, SUPICheck:bitstring) = sdec(HSAUSFx, Ksession) in
+  let (=HSUE) = HSUECheck in
+  let (=SUPI) = SUPICheck in
+  new EAPM:bitstring;
+  out(c1, EAPM);
+  in(c1, SUCMx:bitstring);
+  event termUE(Rausfx).
+
+(* SEAF process *)
+let SEAF(pkAUSF:pkey, pkUDM:pkey, spkAUSF:spkey, spkUE:spkey, SEAFN:bitstring) =
+  in(c1, x1:bitstring);
+  out(c2, (x1, SEAFN));
+  in(c2, x2:bitstring);
+  out(c1, x2);
+  in(c1, x3:bitstring);
+  out(c2, x3);
+  in(c2, (x4:bitstring, x5:bitstring));
+  out(c1, (x4, x5));
+  in(c1, (x6:bitstring, x7:bitstring, x8:bitstring, x9:bitstring));
+  out(c2, (x6, x7, x8, x9));
+  in(c2, x10:bitstring);
+  out(c1, x10);
+  in(c1, EAPMx:bitstring);
+  out(c2, EAPMx);
+  in(c2, SUCMx:bitstring);
+  out(c1, SUCMx).
+
+(* AUSF process *)
+let AUSF(skAUSF:skey, pkUE:pkey, spkUE:spkey, sskAUSF:sskey, spkAUSF:spkey, SEAFN:bitstring) =
+  in(c2, (SUPIx:bitstring, SEAFNx:bitstring));
+  if SEAFNx = SEAFN then
+    out(c3, (SUPIx, SEAFNx));
+    in(c3, Startx:bitstring);
+    out(c2, aenc((Startx, SUPIx), pkUE));
+    in(c2, v:bitstring);
+    let (Rue1x:bitstring, StartCheck:bitstring) = adec(v, skAUSF) in
+    let (=Startx) = StartCheck in
+    new Rausf:bitstring;
+    out(c2, (aenc((Rausf, Rue1x), pkUE), CertAUSF));
+    in(c2, (y:bitstring, CertUEx:bitstring, t:bitstring, z:bitstring));
+    let (=CertUE) = CertUEx in
+    let (prekeyx:bitstring, RueCheck:bitstring) = adec(y, skAUSF) in
+    let b = h(Rue1x, Rausf, prekeyx) in
+    let Ksessionx = b_to_k(b) in
+    new HSAUSF:bitstring;
+    let HSAUSF = (Startx, Rue1x, Rausf, CertAUSF) in
+    let HSAUSFCheck:bitstring = sdec(z, Ksessionx) in
+    let (=HSAUSF) = HSAUSFCheck in
+    let SignatureCheck:bitstring = checksign(t, spkUE) in
+    let (=HSAUSF) = SignatureCheck in
+    event acceptPrek(prekeyx);
+    event acceptsAUSF(Rue1x);
+    out(c2, senc((HSAUSF, SUPIx), Ksessionx));
+    in(c2, EAPMx:bitstring);
+    new SUCM:bitstring;
+    out(c2, SUCM);
+    event termAUSF(Rue1x).
+
+(* UDM process *)
+let UDM(skUDM:skey) =
+  in(c3, (x:bitstring, SEAFNx:bitstring));
+  let (SUPIx:bitstring, Ruex:bitstring) = adec(x, skUDM) in
+  if SUPIx = SUPI then
+    new start:bitstring;
+    out(c3, start).
+
+(* Main process *)
+process
+  new skUE:skey;
+  new skAUSF:skey;
+  new skUDM:skey;
+  new sskAUSF:sskey;
+  new sskUE:sskey;
+  new SEAFN:bitstring;
+  let pkUE = pk(skUE) in out(c1, pkUE); out(c2, pkUE); out(c3, pkUE);
+  let pkAUSF = pk(skAUSF) in out(c1, pkAUSF); out(c2, pkAUSF); out(c3, pkAUSF);
+  let pkUDM = pk(skUDM) in out(c1, pkUDM); out(c2, pkUDM); out(c3, pkUDM);
+  let spkAUSF = spk(sskAUSF) in out(c1, spkAUSF); out(c2, spkAUSF); out(c3, spkAUSF);
+  let spkUE = spk(sskUE) in out(c1, spkUE); out(c2, spkUE); out(c3, spkUE);
+  ( (!UE(pkAUSF, pkUDM, spkAUSF, spkUE, sskUE, skUE))
+  | (!SEAF(pkAUSF, pkUDM, spkAUSF, spkUE, SEAFN))
+  | (!AUSF(skAUSF, pkUE, spkUE, sskAUSF, spkAUSF, SEAFN))
+  | (!UDM(skUDM)) )
 
